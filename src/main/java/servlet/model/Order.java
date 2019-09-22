@@ -1,8 +1,5 @@
 package servlet.model;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class Order {
 
     private static int count = 0;
