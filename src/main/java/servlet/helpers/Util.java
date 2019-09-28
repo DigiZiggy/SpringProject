@@ -1,4 +1,4 @@
-package servlet;
+package servlet.helpers;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -12,5 +12,4 @@ public class Util {
 
         return buffer.lines().collect(Collectors.joining(System.lineSeparator()));
     }
-
 }

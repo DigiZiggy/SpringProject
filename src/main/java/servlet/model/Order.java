@@ -1,10 +1,13 @@
 package servlet.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Order {
 
-    private static int count = 0;
     private Long id;
     private String orderNumber;
+    private List<OrderRow> orderRows;
 
     public Order() {}
 
@@ -16,13 +19,8 @@ public class Order {
         return id;
     }
 
-    public int getCount() {
-        return count;
-    }
-
     public void setId(Long id) {
         this.id = id;
-        count++;
     }
 
     public String getOrderNumber() {
@@ -33,8 +31,32 @@ public class Order {
         this.orderNumber = orderNumber;
     }
 
+    public List<OrderRow> getOrderRows() {
+        return orderRows;
+    }
+
+    public void add(OrderRow orderRow) {
+        if (orderRows == null) {
+            orderRows = new ArrayList<>();
+        }
+
+        orderRows.add(orderRow);
+    }
+
     @Override
     public String toString() {
+        if (orderRows != null) {
+            String orderRowsToString = "";
+            for (int i = 0; i < orderRows.size(); i++) {
+                if (i == orderRows.size() - 1) {
+                    orderRowsToString = orderRowsToString.concat(orderRows.get(i).toString()+"\n");
+                } else {
+                    orderRowsToString = orderRowsToString.concat(orderRows.get(i).toString() + ",\n");
+                }
+            }
+            return "{" + " \"id\": " + "\"" + id + "\"" + ",\"orderNumber\": \"" + orderNumber + "\"," +
+                    "\"orderRows\":[" + orderRowsToString + "]" + "}";
+        }
         return "{" + " \"id\": " + "\"" + id + "\"" + ", \"orderNumber\": \"" + orderNumber + "\"}";
     }
 }

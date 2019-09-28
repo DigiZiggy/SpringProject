@@ -1,5 +1,7 @@
 package servlet;
 
+import servlet.helpers.Util;
+
 import java.io.IOException;
 import java.util.*;
 import java.util.regex.Matcher;
@@ -12,6 +14,8 @@ import javax.servlet.http.HttpServletResponse;
 
 @WebServlet(name = "Parser", urlPatterns = "/api/parser")
 public class ParserServlet extends HttpServlet {
+
+    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
@@ -46,6 +50,7 @@ public class ParserServlet extends HttpServlet {
         response.getWriter().print(reversedPostReq.toString());
     }
 
+    @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 

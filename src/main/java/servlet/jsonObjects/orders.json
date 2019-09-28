@@ -1,0 +1,17 @@
+[ {
+  "id" : 1,
+  "orderNumber" : "A123",
+  "orderRows" : null
+}, {
+  "id" : 2,
+  "orderNumber" : "A456",
+  "orderRows" : [ {
+    "itemName" : "CPU",
+    "quantity" : 2,
+    "price" : 100
+  }, {
+    "itemName" : "Motherboard",
+    "quantity" : 3,
+    "price" : 60
+  } ]
+} ]
