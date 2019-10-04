@@ -1,4 +1,4 @@
-package servlet.model;
+package servlet.jdbc;
 
 public class OrderRow {
     private String itemName;

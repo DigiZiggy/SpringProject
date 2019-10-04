@@ -1,6 +1,6 @@
 package servlet;
 
-import servlet.helpers.Util;
+import servlet.util.FileUtil;
 
 import java.io.IOException;
 import java.util.*;
@@ -19,7 +19,7 @@ public class ParserServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        String string = Util.readStream(request.getInputStream());
+        String string = FileUtil.readStream(request.getInputStream());
 
         //find all elements in " "
         Pattern pattern = Pattern.compile("\"(.*?)\"");

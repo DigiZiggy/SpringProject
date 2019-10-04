@@ -3,8 +3,8 @@ package servlet;
 import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
-import servlet.helpers.Util;
-import servlet.model.Order;
+import servlet.jdbc.Order;
+import servlet.util.FileUtil;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -46,7 +46,7 @@ public class FormServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        String json = Util.readStream(request.getInputStream());
+        String json = FileUtil.readStream(request.getInputStream());
         String orderNumber = "";
 
         //find order number using regex matcher

@@ -1,12 +1,11 @@
 package servlet;
 
-import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
-import servlet.helpers.JsonConverter;
-import servlet.helpers.Util;
-import servlet.model.Order;
-import servlet.model.OrderRow;
+import servlet.jdbc.Order;
+import servlet.jdbc.OrderDao;
+import servlet.util.DataSourceProvider;
+import servlet.util.DbUtil;
+import servlet.util.JsonConverter;
+import servlet.util.FileUtil;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -15,48 +14,30 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
-import java.util.ArrayList;
 import java.util.List;
 
 @WebServlet(name = "Orders", urlPatterns = "/api/orders")
 public class OrdersServlet extends HttpServlet {
 
-    private List<Order> ordersList;
-    private File file;
-    private ObjectMapper mapper;
+    private OrderDao orderDao;
 
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
-        ordersList = new ArrayList<>();
-        file = new File("./src/main/java/servlet/jsonObjects/orders.json");
-        mapper = new ObjectMapper();
+
+        DataSourceProvider.setConnectionInfo(DbUtil.loadConnectionInfo());
+        orderDao = new OrderDao(DataSourceProvider.getDataSource());
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        String json = Util.readStream(request.getInputStream());
+        String json = FileUtil.readStream(request.getInputStream());
         Order orderObject = JsonConverter.convertJsonToObject(json);
 
-        String orderNumber = orderObject.getOrderNumber();
-
         //create new order object with unique id
-        Order order = new Order();
-        order.setId(ordersList.size()+1L);
-        order.setOrderNumber(orderNumber);
-        if (orderObject.getOrderRows() != null) {
-            List<OrderRow> orderRows = orderObject.getOrderRows();
-            for (OrderRow row : orderRows) {
-                order.add(row);
-            }
-        }
-        ordersList.add(order);
-
-        //add orders into json file
-        ObjectWriter writer = mapper.writer(new DefaultPrettyPrinter());
-        writer.writeValue(file, ordersList);
+        Order order = orderDao.insertOrder(orderObject);
 
         response.setHeader("Content-Type", "application/json");
         response.getWriter().print(order.toString());
@@ -66,15 +47,14 @@ public class OrdersServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        Order[] orders = mapper.readValue(file, Order[].class);
-
-        Long id = Long.parseLong(request.getParameter("id"));
-
         response.setHeader("Content-Type", "application/json");
-        for (Order order : orders) {
-            if (order.getId().equals(id)) {
-                response.getWriter().print(order.toString());
-            }
+        if (request.getParameter("id") == null) {
+            List<Order> orders = orderDao.findOrders();
+            response.getWriter().print(orders.toString());
+        } else {
+            Long id = Long.parseLong(request.getParameter("id"));
+            Order order = orderDao.findOrderById(id);
+            response.getWriter().print(order.toString());
         }
     }
 }

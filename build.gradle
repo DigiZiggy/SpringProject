@@ -12,6 +12,29 @@ sourceCompatibility = 11
 dependencies {
     compileOnly 'javax.servlet:javax.servlet-api:4.0.1'
     compile 'com.fasterxml.jackson.core:jackson-databind:2.9.9.3'
+    compile group: 'org.postgresql',
+            name: 'postgresql',
+            version: '42.2.7'
+
+    compile group: 'org.apache.commons',
+            name: 'commons-dbcp2',
+            version: '2.7.0'
+
+    compile group: 'org.apache.logging.log4j',
+            name: 'log4j-api',
+            version: '2.11.1'
+
+    compile group: 'org.apache.logging.log4j',
+            name: 'log4j-core',
+            version: '2.11.1'
+
+    compileOnly group: 'org.projectlombok',
+            name: 'lombok',
+            version: '1.18.10'
+
+    annotationProcessor group: 'org.projectlombok',
+            name: 'lombok',
+            version: '1.18.10'
 }
 
 gretty {

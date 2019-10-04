@@ -1,8 +1,8 @@
-package servlet.helpers;
+package servlet.util;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import servlet.model.Order;
+import servlet.jdbc.Order;
 
 import java.io.IOException;
 
