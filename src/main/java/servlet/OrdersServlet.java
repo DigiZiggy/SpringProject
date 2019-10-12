@@ -64,10 +64,9 @@ public class OrdersServlet extends HttpServlet {
 
         try {
             Long id = Long.parseLong(request.getParameter("id"));
-            System.out.println("ID!!! " + id);
             orderDao.deleteOrderById(id);
         } catch (NumberFormatException e) {
-            e.printStackTrace();
+            log("Only integers allowed for id parameters!", e);
         }
     }
 }
