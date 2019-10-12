@@ -181,7 +181,7 @@ public class OrderDao {
              PreparedStatement ps = conn.prepareStatement(query)) {
 
             ps.setLong(1, id);
-            ps.executeQuery();
+            ps.executeUpdate();
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
