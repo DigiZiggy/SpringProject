@@ -57,4 +57,13 @@ public class OrdersServlet extends HttpServlet {
             response.getWriter().print(order.toString());
         }
     }
+
+    @Override
+    protected void doDelete(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        response.setHeader("Content-Type", "application/json");
+        Long id = Long.parseLong(request.getParameter("id"));
+        orderDao.deleteOrderById(id);
+    }
 }
