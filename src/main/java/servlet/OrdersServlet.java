@@ -62,8 +62,12 @@ public class OrdersServlet extends HttpServlet {
     protected void doDelete(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        response.setHeader("Content-Type", "application/json");
-        Long id = Long.parseLong(request.getParameter("id"));
-        orderDao.deleteOrderById(id);
+        try {
+            Long id = Long.parseLong(request.getParameter("id"));
+            System.out.println("ID!!! " + id);
+            orderDao.deleteOrderById(id);
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+        }
     }
 }
