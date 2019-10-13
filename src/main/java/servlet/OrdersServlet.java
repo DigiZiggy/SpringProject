@@ -33,14 +33,14 @@ public class OrdersServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        String json = FileUtil.readStream(request.getInputStream());
-        Order orderObject = JsonConverter.convertJsonToObject(json);
+        String orderFromStream = FileUtil.readStream(request.getInputStream());
+        Order orderObject = JsonConverter.convertJsonToObject(orderFromStream);
 
         //create new order object with unique id
         Order order = orderDao.insertOrder(orderObject);
 
         response.setHeader("Content-Type", "application/json");
-        response.getWriter().print(order.toString());
+        response.getWriter().print(JsonConverter.convertObjectToJson(order));
     }
 
     @Override
@@ -50,11 +50,11 @@ public class OrdersServlet extends HttpServlet {
         response.setHeader("Content-Type", "application/json");
         if (request.getParameter("id") == null) {
             List<Order> orders = orderDao.findOrders();
-            response.getWriter().print(orders.toString());
+            response.getWriter().print(JsonConverter.convertOrdersListToJson(orders));
         } else {
             Long id = Long.parseLong(request.getParameter("id"));
             Order order = orderDao.findOrderById(id);
-            response.getWriter().print(order.toString());
+            response.getWriter().print(JsonConverter.convertObjectToJson(order));
         }
     }
 

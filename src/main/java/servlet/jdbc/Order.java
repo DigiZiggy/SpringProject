@@ -43,21 +43,4 @@ public class Order {
 
         orderRows.add(orderRow);
     }
-
-    @Override
-    public String toString() {
-        if (orderRows != null) {
-            String orderRowsToString = "";
-            for (int i = 0; i < orderRows.size(); i++) {
-                if (i == orderRows.size() - 1) {
-                    orderRowsToString = orderRowsToString.concat(orderRows.get(i).toString()+"\n");
-                } else {
-                    orderRowsToString = orderRowsToString.concat(orderRows.get(i).toString() + ",\n");
-                }
-            }
-            return "{" + " \"id\": " + "\"" + id + "\"" + ",\"orderNumber\": \"" + orderNumber + "\"," +
-                    "\"orderRows\":[" + orderRowsToString + "]" + "}";
-        }
-        return "{" + " \"id\": " + "\"" + id + "\"" + ", \"orderNumber\": \"" + orderNumber + "\"}";
-    }
 }

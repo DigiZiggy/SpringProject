@@ -11,7 +11,11 @@ sourceCompatibility = 11
 
 dependencies {
     compileOnly 'javax.servlet:javax.servlet-api:4.0.1'
-    compile 'com.fasterxml.jackson.core:jackson-databind:2.9.9.3'
+    compileOnly 'javax.servlet:javax.servlet-api:4.0.1'
+    compile group: 'com.fasterxml.jackson.core',
+            name: 'jackson-databind',
+            version: '2.9.9.3'
+
     compile group: 'org.postgresql',
             name: 'postgresql',
             version: '42.2.7'
