@@ -1,4 +1,5 @@
 plugins {
+    id 'java'
     id 'war'
     id 'org.gretty' version '2.3.1'
 }
@@ -9,39 +10,72 @@ repositories {
 
 sourceCompatibility = 11
 
+def springVersion = '5.2.0.RELEASE'
+def log4jVersion = '2.12.1'
+def lombokVersion = '1.18.10'
+def hsqldbVersion = '2.5.0'
+def aspectjweaverVersion = '1.9.4'
+def postgresVersion = '42.2.7'
+
 dependencies {
     compileOnly 'javax.servlet:javax.servlet-api:4.0.1'
     compileOnly 'javax.servlet:javax.servlet-api:4.0.1'
+
+    compile group: 'org.springframework',
+            name: 'spring-context',
+            version: springVersion
+
+    compile group: 'org.springframework',
+            name: 'spring-jdbc',
+            version: springVersion
+
+    compile group: 'org.springframework',
+            name: 'spring-aop',
+            version: springVersion
+
     compile group: 'com.fasterxml.jackson.core',
             name: 'jackson-databind',
             version: '2.9.9.3'
 
+    compile group: 'org.aspectj',
+            name: 'aspectjweaver',
+            version: aspectjweaverVersion
+
     compile group: 'org.postgresql',
             name: 'postgresql',
-            version: '42.2.7'
+            version: postgresVersion
 
     compile group: 'org.apache.commons',
             name: 'commons-dbcp2',
             version: '2.7.0'
 
+    compile group: 'org.hsqldb',
+            name: 'hsqldb',
+            version: hsqldbVersion
+
     compile group: 'org.apache.logging.log4j',
             name: 'log4j-api',
-            version: '2.11.1'
+            version: log4jVersion
 
     compile group: 'org.apache.logging.log4j',
             name: 'log4j-core',
-            version: '2.11.1'
+            version: log4jVersion
 
     compileOnly group: 'org.projectlombok',
             name: 'lombok',
-            version: '1.18.10'
+            version: lombokVersion
 
     annotationProcessor group: 'org.projectlombok',
             name: 'lombok',
-            version: '1.18.10'
+            version: lombokVersion
 }
 
 gretty {
     contextPath = '/'
     servletContainer = 'jetty9.4'
+}
+
+task runMain(type: JavaExec) {
+    main = 'main.Main'
+    classpath = sourceSets.main.runtimeClasspath
 }

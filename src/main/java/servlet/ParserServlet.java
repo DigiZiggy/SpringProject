@@ -1,5 +1,8 @@
 package servlet;
 
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Service;
 import servlet.util.FileUtil;
 
 import java.io.IOException;
@@ -12,6 +15,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+@Service
+@Scope(BeanDefinition.SCOPE_PROTOTYPE)
 @WebServlet(name = "Parser", urlPatterns = "/api/parser")
 public class ParserServlet extends HttpServlet {
 

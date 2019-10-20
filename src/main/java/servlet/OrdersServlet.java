@@ -1,9 +1,13 @@
 package servlet;
 
-import servlet.jdbc.Order;
-import servlet.jdbc.OrderDao;
-import servlet.util.DataSourceProvider;
-import servlet.util.DbUtil;
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Service;
+import servlet.main.ServletContextListener;
+import servlet.model.Order;
+import servlet.main.OrderDao;
+import servlet.model.ValidationError;
+import servlet.model.ValidationErrors;
 import servlet.util.JsonConverter;
 import servlet.util.FileUtil;
 
@@ -14,8 +18,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.util.Collections;
 import java.util.List;
 
+@Service
+@Scope(BeanDefinition.SCOPE_PROTOTYPE)
 @WebServlet(name = "Orders", urlPatterns = "/api/orders")
 public class OrdersServlet extends HttpServlet {
 
@@ -24,9 +31,9 @@ public class OrdersServlet extends HttpServlet {
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
+        var ctx = ServletContextListener.contextInitialized();
 
-        DataSourceProvider.setConnectionInfo(DbUtil.loadConnectionInfo());
-        orderDao = new OrderDao(DataSourceProvider.getDataSource());
+        orderDao = ctx.getBean(OrderDao.class);
     }
 
     @Override
@@ -34,13 +41,25 @@ public class OrdersServlet extends HttpServlet {
             throws ServletException, IOException {
 
         String orderFromStream = FileUtil.readStream(request.getInputStream());
-        Order orderObject = JsonConverter.convertJsonToObject(orderFromStream);
-
-        //create new order object with unique id
-        Order order = orderDao.insertOrder(orderObject);
+        Order orderObject = JsonConverter.convertJsonToOrderObject(orderFromStream);
 
         response.setHeader("Content-Type", "application/json");
-        response.getWriter().print(JsonConverter.convertObjectToJson(order));
+
+        if (orderObject.getOrderNumber().length() < 2) {
+            response.setStatus(400);
+
+            ValidationErrors validationErrors = new ValidationErrors();
+            ValidationError error = new ValidationError();
+
+            error.setCode("too_short_number");
+            validationErrors.setErrors(Collections.singletonList(error));
+
+            response.getWriter().print(JsonConverter.convertValidationObjectToJson(validationErrors));
+
+        } else {
+            Order order = orderDao.insertOrder(orderObject);
+            response.getWriter().print(JsonConverter.convertOrderObjectToJson(order));
+        }
     }
 
     @Override
@@ -54,7 +73,7 @@ public class OrdersServlet extends HttpServlet {
         } else {
             Long id = Long.parseLong(request.getParameter("id"));
             Order order = orderDao.findOrderById(id);
-            response.getWriter().print(JsonConverter.convertObjectToJson(order));
+            response.getWriter().print(JsonConverter.convertOrderObjectToJson(order));
         }
     }
 

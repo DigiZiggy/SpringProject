@@ -2,12 +2,28 @@
 <Configuration>
     <Appenders>
         <Console name="Console" target="SYSTEM_OUT">
-            <PatternLayout pattern="%c{2} %msg%n"/>
+            <PatternLayout
+                    pattern="%c{5}:%L %msg%n"/>
         </Console>
     </Appenders>
     <Loggers>
-        <Root level="WARN">
+        <Root level="ERROR">
             <AppenderRef ref="Console"/>
         </Root>
+
+        <Logger name="aop"
+                level="DEBUG"
+                additivity="false">
+
+            <AppenderRef ref="Console"/>
+        </Logger>
+
+        <Logger name="service"
+                level="DEBUG"
+                additivity="false">
+
+            <AppenderRef ref="Console"/>
+        </Logger>
+
     </Loggers>
 </Configuration>

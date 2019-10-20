@@ -1,4 +1,4 @@
-package servlet.jdbc;
+package servlet.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

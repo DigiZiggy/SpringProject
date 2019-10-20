@@ -1,11 +1,18 @@
-package servlet.jdbc;
+package servlet.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class OrderRow {
+    private Long id;
+    private Long orderId;
     private String itemName;
     private Integer quantity;
     private Integer price;
-
-    public OrderRow() {}
 
     public OrderRow(String itemName, Integer quantity, Integer price) {
         this.itemName = itemName;
@@ -23,14 +30,5 @@ public class OrderRow {
 
     public Integer getPrice() {
         return price;
-    }
-
-    @Override
-    public String toString() {
-        return "{" +
-                "\"itemName\":\"" + itemName + '\"' +
-                ", \"quantity\":" + quantity +
-                ", \"price\":" + price +
-                '}';
     }
 }

@@ -3,7 +3,10 @@ package servlet;
 import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
-import servlet.jdbc.Order;
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Service;
+import servlet.model.Order;
 import servlet.util.FileUtil;
 
 import javax.servlet.ServletConfig;
@@ -20,6 +23,8 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@Service
+@Scope(BeanDefinition.SCOPE_PROTOTYPE)
 @WebServlet(name = "FormServlet", urlPatterns = "/orders/form")
 public class FormServlet extends HttpServlet {
 
