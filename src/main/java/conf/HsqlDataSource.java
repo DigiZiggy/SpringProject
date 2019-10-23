@@ -1,4 +1,4 @@
-package servlet.config;
+package conf;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -10,9 +10,9 @@ import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import javax.sql.DataSource;
 
 @Configuration
-//@Profile("postgres")
+//@Profile("hsql")
 @PropertySource("classpath:/application.properties")
-public class PostgresDataSource {
+public class HsqlDataSource {
 
     @Autowired
     private Environment env;
@@ -20,10 +20,8 @@ public class PostgresDataSource {
     @Bean
     public DataSource dataSource() {
         DriverManagerDataSource ds = new DriverManagerDataSource();
-        ds.setDriverClassName("org.postgresql.Driver");
-        ds.setUsername(env.getProperty("postgres.user"));
-        ds.setPassword(env.getProperty("postgres.pass"));
-        ds.setUrl(env.getProperty("postgres.url"));
+        ds.setDriverClassName("org.hsqldb.jdbcDriver");
+        ds.setUrl(env.getProperty("hsql.url"));
         return ds;
     }
 }

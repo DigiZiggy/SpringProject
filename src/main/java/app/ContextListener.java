@@ -1,15 +1,17 @@
-package servlet.main;
+package app;
 
+import conf.HsqlDataSource;
+import conf.MvcConfig;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import servlet.config.Config;
-import servlet.config.PostgresDataSource;
 
-public class ServletContextListener {
+public class ContextListener {
 
     public static AnnotationConfigApplicationContext contextInitialized() {
         return new AnnotationConfigApplicationContext(
-                Config.class,
-                PostgresDataSource.class);
+                MvcConfig.class,
+                HsqlDataSource.class
+//                PostgresDataSource.class
+        );
 
     }
 }

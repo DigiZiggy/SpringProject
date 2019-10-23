@@ -1,15 +1,17 @@
-package servlet.main;
+package app;
 
+import model.Order;
+import model.OrderRow;
 import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
-import servlet.model.Order;
-import servlet.model.OrderRow;
 
-import java.sql.*;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Collections;
 import java.util.List;
 
@@ -57,7 +59,7 @@ public class OrderDao {
                 orderRow.getPrice());
     }
 
-    public Order findOrderById(Long id) {
+    public Order getOrderById(Long id) {
 
         String query = "select id, ordernumber from \"order\" where id = ?";
 
@@ -79,7 +81,7 @@ public class OrderDao {
         }
     }
 
-    public List<Order> findOrders() {
+    public List<Order> getAllOrders() {
 
         String query = "select id, ordernumber from \"order\"";
 
