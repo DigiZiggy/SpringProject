@@ -10,17 +10,12 @@ import javax.validation.constraints.NotNull;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class OrderRow {
-    private Long id;
-    private Long orderId;
-    private String itemName;
+public class Installment {
 
     @NotNull
     @Min(1)
-    private Integer quantity;
+    private Integer amount;
 
     @NotNull
-    @Min(1)
-    private Integer price;
-
+    private String date;
 }

@@ -57,6 +57,10 @@ dependencies {
             name: 'jackson-databind',
             version: '2.9.9.3'
 
+    compile group: 'com.fasterxml.jackson.datatype',
+            name: 'jackson-datatype-jsr310',
+            version: '2.10.0'
+
     compile group: 'org.aspectj',
             name: 'aspectjweaver',
             version: aspectjweaverVersion

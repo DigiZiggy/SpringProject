@@ -1,5 +1,6 @@
 package app;
 
+import model.Installment;
 import model.Order;
 import model.OrderRow;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,9 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -41,7 +45,14 @@ public class OrderDao {
         return new Order(id, order.getOrderNumber(), order.getOrderRows());
     }
 
-    public OrderRow insertOrderRow(OrderRow orderRow, Long orderId) {
+    public Order getOrderById(Long id) {
+
+        String query = "select id, ordernumber from \"order\" where id = ?";
+
+        return template.queryForObject(query, new Object[]{id}, new OrderMapper());
+    }
+
+    private void insertOrderRow(OrderRow orderRow, Long orderId) {
 
         orderRow.setOrderId(orderId);
         var data = new BeanPropertySqlParameterSource(orderRow);
@@ -51,7 +62,7 @@ public class OrderDao {
                 .usingGeneratedKeyColumns("id")
                 .executeAndReturnKey(data);
 
-        return new OrderRow(
+        new OrderRow(
                 id.longValue(),
                 orderId,
                 orderRow.getItemName(),
@@ -59,11 +70,110 @@ public class OrderDao {
                 orderRow.getPrice());
     }
 
-    public Order getOrderById(Long id) {
+    public List<Installment> getInstallmentsForOrderById(Long id, String startDate, String endDate) {
+
+        Integer totalAmountForOrder = getOrderTotalAmount(id);
+
+        Long amountOfInstallments = getTotalAmountOfInstallmentMonths(startDate, endDate);
+
+        List<Installment> installments = new ArrayList<>();
+
+        List<Integer> installmentAmounts = getAmountForEachInstallment(
+                totalAmountForOrder,
+                amountOfInstallments.intValue());
+
+        List<String> installmentDates = getDatesForEachInstallment(startDate, endDate);
+
+        for (int i = 0; i < installmentAmounts.size(); i++) {
+            Installment installment = new Installment(
+                    installmentAmounts.get(i),
+                    installmentDates.get(i));
+
+            installments.add(installment);
+        }
+
+        return installments;
+    }
+
+    private List<Integer> getAmountForEachInstallment(Integer orderTotal, Integer amountOfInstallments) {
+
+        List<Integer> installmentAmounts = new ArrayList<>();
+
+        int eachAmount = orderTotal / amountOfInstallments;
+
+        int remainder = orderTotal%amountOfInstallments;
+
+        if (eachAmount < 3) {
+            int installmentTotal = orderTotal / eachAmount;
+            int totalRemainder = orderTotal%eachAmount;
+
+            addInstallmentAmountsToList(installmentAmounts, eachAmount, installmentTotal, totalRemainder);
+
+        } else {
+            addInstallmentAmountsToList(installmentAmounts, amountOfInstallments, eachAmount, remainder);
+        }
+
+        return installmentAmounts;
+    }
+
+    private void addInstallmentAmountsToList(List<Integer> installmentAmounts, int eachAmount, int installmentTotal, int totalRemainder) {
+        for (int i = 0; i < eachAmount-totalRemainder; i++) {
+            installmentAmounts.add(installmentTotal);
+        }
+        if (totalRemainder == 2) {
+            installmentAmounts.add(installmentTotal+1);
+            installmentAmounts.add(installmentTotal+1);
+        } else if (totalRemainder == 1){
+            installmentAmounts.add(installmentTotal+1);
+        }
+    }
+
+    private List<String> getDatesForEachInstallment(String startDate, String endDate) {
+
+        List<String> installmentDates = new ArrayList<>();
+
+        int count = getTotalAmountOfInstallmentMonths(startDate, endDate).intValue();
+
+        installmentDates.add(startDate);
+        LocalDate date = LocalDate.parse(startDate);
+        for (int i = 1; i < count; i++) {
+            date = date.plusDays(31);
+            String nextInstallmentDate = getFirstDayOfMonthDate(date.toString());
+            installmentDates.add(nextInstallmentDate);
+        }
+        return installmentDates;
+    }
+
+    private Integer getOrderTotalAmount(Long id) {
 
         String query = "select id, ordernumber from \"order\" where id = ?";
 
-        return template.queryForObject(query, new Object[]{id}, new OrderMapper());
+        Order order = template.queryForObject(query, new Object[]{id}, new OrderMapper());
+
+        int total = 0;
+
+        assert order != null;
+        for (OrderRow row : order.getOrderRows()) {
+            total += row.getPrice() * row.getQuantity();
+        }
+
+        return total;
+    }
+
+
+    private Long getTotalAmountOfInstallmentMonths(String startDate, String endDate) {
+
+        String start = getFirstDayOfMonthDate(startDate);
+        String end = getFirstDayOfMonthDate(endDate);
+
+        return ChronoUnit.MONTHS.between(
+                LocalDate.parse(start),
+                LocalDate.parse(end).plusDays(31));
+    }
+
+    private String getFirstDayOfMonthDate(String date) {
+
+        return date.substring(0, 8) + "01";
     }
 
     public List<OrderRow> findOrderRowsById(Long id) {
@@ -121,7 +231,7 @@ public class OrderDao {
     }
 
 
-    private class OrderRowMapper implements RowMapper<OrderRow> {
+    private static class OrderRowMapper implements RowMapper<OrderRow> {
         @Override
         public OrderRow mapRow(ResultSet rs, int rowNum) throws SQLException {
 

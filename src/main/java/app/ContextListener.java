@@ -6,8 +6,8 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 
 public class ContextListener {
 
-    public static AnnotationConfigApplicationContext contextInitialized() {
-        return new AnnotationConfigApplicationContext(
+    public static void contextInitialized() {
+        new AnnotationConfigApplicationContext(
                 MvcConfig.class,
                 HsqlDataSource.class
 //                PostgresDataSource.class

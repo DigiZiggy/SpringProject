@@ -1,6 +1,5 @@
 package conf;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
@@ -14,8 +13,11 @@ import javax.sql.DataSource;
 @PropertySource("classpath:/application.properties")
 public class PostgresDataSource {
 
-    @Autowired
-    private Environment env;
+    private final Environment env;
+
+    public PostgresDataSource(Environment env) {
+        this.env = env;
+    }
 
     @Bean
     public DataSource dataSource() {
