@@ -1,7 +1,7 @@
-package app;
+package main;
 
-import conf.HsqlDataSource;
-import conf.MvcConfig;
+import config.HsqlDataSource;
+import config.MvcConfig;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 public class ContextListener {
@@ -10,7 +10,6 @@ public class ContextListener {
         new AnnotationConfigApplicationContext(
                 MvcConfig.class,
                 HsqlDataSource.class
-//                PostgresDataSource.class
         );
 
     }

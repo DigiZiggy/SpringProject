@@ -1,26 +1,34 @@
 package model;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
+import javax.persistence.*;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
+@Embeddable
+@Table(name = "order_rows")
 public class OrderRow {
-    private Long id;
-    private Long orderId;
+
+//    @Id
+//    @GeneratedValue
+//    private Long id;
+
+//    private Long orderId;
+
+    @NonNull
+    @Column(name = "item_name")
     private String itemName;
 
     @NotNull
     @Min(1)
-    private Integer quantity;
+    private Integer price;
 
     @NotNull
     @Min(1)
-    private Integer price;
+    private Integer quantity;
 
 }
