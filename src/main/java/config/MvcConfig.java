@@ -1,6 +1,8 @@
 package config;
 
+import main.HsqlServer;
 import org.hibernate.jpa.HibernatePersistenceProvider;
+import org.hsqldb.Server;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -32,6 +34,8 @@ public class MvcConfig {
     public EntityManagerFactory entityManagerFactory(
             DataSource dataSource,
             @Qualifier("dialect") String  dialect) {
+
+        HsqlServer.run();
 
         var populator = new ResourceDatabasePopulator(
                 new ClassPathResource("schema.sql"));

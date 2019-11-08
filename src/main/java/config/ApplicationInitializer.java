@@ -1,5 +1,6 @@
 package config;
 
+import org.hsqldb.Server;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
 public class ApplicationInitializer extends
